@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Heaven Interior</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="/styles/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Logo in top-left corner -->
+  <div class="logo">
+    HEAVEN
+    <span class="interior">INTERIOR</span>
+  </div>
+
+  <div class="login-container">
+    <h3>Register</h3>
+
+  <!-- Signup form -->
+    <form action="/signup" method="POST" style="width: 100%; max-width: 400px;" onsubmit="return validateForm()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Enter Email/Mobile number</label>
+        <input type="email" name="email" class="form-control" id="email" required>
+      </div>
+    
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" name="username" class="form-control" id="username" required>
+      </div>
+    
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" id="password" required>
+        <div id="passwordError" class="error-box"></div> <!-- Error box for password validation -->
+      </div>
+
+      <% if (errorMessage) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= errorMessage %>
+        </div>
+      <% } %>
+
+      
+
+      <button type="submit" class="btn btn-custom">Sign Up</button>
+    </form>
+    
+    
+    <div class="links-container">
+      <a href="/login">Already have an account? Login</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    function validateForm() {
+      const password = document.getElementById('password').value;
+
+      // Error message elements
+      const passwordError = document.getElementById('passwordError');
+      
+      // Reset error messages
+      passwordError.textContent = '';
+
+      let valid = true;
+
+      
+      // Password validation: check if it's at least 8 characters and contains at least one number
+      if (!/^(?=.*\d).{8,}$/.test(password)) {
+        passwordError.textContent = "Password must be at least 8 characters long and contain at least one number.";
+        valid = false;
+      }
+
+      return valid; // Only submit form if validation passed
+    }
+  </script>
+</body>
+</html>

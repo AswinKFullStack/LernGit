@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heaven Interior</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.25em;
+            background-color: white;
+            box-shadow: 0 0.25em 0.125em -0.125em gray;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 75em;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 1.25em;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d4739;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .logo .interior {
+            font-size: 0.61em;
+            font-weight: 300;
+            display: block;
+            color: #2d4739;
+            letter-spacing: 0.05em;
+            margin-top: 0.2em;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 37.5em;
+            margin: 0 3.125em;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.625em;
+            border-radius: 0.3125em;
+            border: 0.0625em solid #ccc;
+        }
+
+        .login-link {
+    color: #000; /* Black color */
+    text-decoration: none; /* Remove underline */
+}
+
+.login-link:hover {
+    color: #3c523e; /* Optional: Blue on hover */
+}
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            right: 1.25em;
+        }
+
+        .nav-icons i {
+            margin: 0 0.625em;
+            font-size: 1.25em;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 75em;
+            margin-top: 0.625em;
+        }
+
+        .nav-links a {
+            margin: 0 1em;
+            text-decoration: none;
+            color: black;
+        }
+
+        .banner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 25em;
+            background-image: url('/user_image/image.png'); /* Ensure this path is correct */
+            background-position: center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .category-links {
+            display: flex;
+            justify-content: center;
+            margin: 2em 0;
+        }
+
+        .category-links a {
+            margin: 0 1em;
+            text-decoration: none;
+            color: #2d4739;
+            font-size: 1.125em;
+            font-weight: bold;
+        }
+
+        .additional-image {
+            display: flex;
+            justify-content: center;
+            margin-top: 2em; /* Space above the image */
+            width: 100%;
+            height: 100em; /* Adjust this height as needed */
+            overflow: hidden; /* Ensures that any overflow is hidden */
+        }
+
+        .additional-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <a href="/" class="logo">
+                HEAVEN
+                <span class="interior">INTERIOR</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" placeholder="What are you looking for?">
+            </div>
+            <div class="nav-icons">
+                <a href="/user_login" class="login-link">
+                    <i class="fa fa-user"></i> <span>Log in</span>
+                </a>
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="#">HOME</a>
+            <a href="#">SHOP</a>
+            <a href="#">CONTACT</a>
+            <a href="#">WISHLIST</a>
+            <a href="#">ORDERS</a>
+        </div>
+    </div>
+
+    <!-- Banner -->
+    <div class="banner">
+        <!-- Banner content can be added here -->
+    </div>
+
+    <!-- Category Links -->
+    <div class="category-links">
+        <a href="#">NEW ARRIVALS</a>
+        <a href="#">BEDROOM</a>
+        <a href="#">FURNITURE</a>
+        <a href="#">KITCHEN</a>
+        <a href="#">DECORATING</a>
+        <a href="#">PLANTS</a>
+    </div>
+
+    <!-- Additional Image -->
+    <div class="additional-image">
+        <img src="/user_image/2.png" alt="Decorative Image">
+    </div>
+    <%- include('../partials/footer') %>
+</body>
+</html>

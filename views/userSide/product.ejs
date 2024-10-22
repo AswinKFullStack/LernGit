@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="product-list">
+    <% products.forEach(product => { %>
+      <div class="product">
+        <a href="/product/<%= product._id %>">
+          <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+          <h3><%= product.name %></h3>
+          <p>Price: $<%= product.price %></p>
+          <% if (product.discounts > 0) { %>
+            <p>Discount: <%= product.discounts %>%</p>
+          <% } %>
+        </a>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Customer Management</h2>
+
+        <!-- Search Bar -->
+        <form class="form-inline my-2 my-lg-0" method="GET" action="/adminPanel/customers">
+            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search by name or email" aria-label="Search" value="<%= search %>">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <!-- Customer Table -->
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (customers.length > 0) { %>
+                    <% customers.forEach(customer => { %>
+                    <tr>
+                        <td><%= customer.name %></td>
+                        <td><%= customer.email %></td>
+                        <td><%= customer.status === 'active' ? 'Active' : 'Blocked' %></td>
+                        <td>
+                            <!-- Block/Unblock Button -->
+                            <form action="/adminPanel/customers/toggle-status/<%= customer._id %>" method="POST" style="display:inline-block;">
+                                <button type="submit" class="btn btn-sm <%= customer.status === 'active' ? 'btn-danger' : 'btn-success' %>">
+                                    <%= customer.status === 'active' ? 'Block' : 'Unblock' %>
+                                </button>
+                            </form>
+
+                            <!-- Edit Button -->
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editCustomerModal<%= customer._id %>">Edit</button>
+
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editCustomerModal<%= customer._id %>" tabindex="-1" role="dialog" aria-labelledby="editCustomerModalLabel<%= customer._id %>" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editCustomerModalLabel<%= customer._id %>">Edit Customer</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="/adminPanel/customers/edit/<%= customer._id %>" method="POST">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="name">Name</label>
+                                                    <input type="text" name="name" class="form-control" value="<%= customer.name %>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" name="email" class="form-control" value="<%= customer.email %>" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="4" class="text-center">No customers found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <!-- Previous button -->
+                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                        <a class="page-link" href="/adminPanel/customers?page=<%= currentPage - 1 %>&search=<%= search %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+        
+                    <!-- Page number buttons -->
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                            <a class="page-link" href="/adminPanel/customers?page=<%= i %>&search=<%= search %>"><%= i %></a>
+                        </li>
+                    <% } %>
+        
+                    <!-- Next button -->
+                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                        <a class="page-link" href="/adminPanel/customers?page=<%= currentPage + 1 %>&search=<%= search %>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

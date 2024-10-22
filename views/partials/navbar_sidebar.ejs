@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <div class="logo">
+        HEAVEN
+        <span class="interior">INTERIOR</span>
+    </div>
+    <a href="/logout" class="btn btn-outline-danger btn-search">Log Out</a>
+  </div>
+  </nav>
+  
+  <div class="sidebar">
+    <ul>
+      <li><a href="/adminPanel/dashboard" class="<%= (body === 'partials/dashboard') ? 'active' : '' %>">Dashboard</a></li>
+      <li><a href="/adminPanel/orders" class="<%= (body === 'partials/orders') ? 'active' : '' %>">Orders</a></li>
+      <li><a href="/adminPanel/products" class="<%= (body === 'partials/products') ? 'active' : '' %>">Products</a></li>
+      <li><a href="/adminPanel/category" class="<%= (body === 'partials/category') ? 'active' : '' %>">Category</a></li>
+      <li><a href="/adminPanel/customers" class="<%= (body === 'partials/customers') ? 'active' : '' %>">Customers</a></li>
+      <li><a href="/adminPanel/offers" class="<%= (body === 'partials/offers') ? 'active' : '' %>">Offers</a></li>
+      <li><a href="/adminPanel/settings" class="<%= (body === 'partials/settings') ? 'active' : '' %>">Settings</a></li>
+    </ul>
+  </div>
+  

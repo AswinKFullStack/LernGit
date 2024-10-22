@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Product Management</h2>
+        
+        <!-- Search Bar -->
+        <form method="GET" action="/adminPanel/products" class="form-inline mb-3">
+            <div class="form-group mr-2">
+                <input type="text" name="search" class="form-control" placeholder="Search by name" value="<%= search %>">
+            </div>
+            <button type="submit" class="btn btn-success">Search</button>
+        </form>
+
+        <!-- Add Product Button -->
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProductModal">
+            Add Product
+        </button>
+
+        <!-- Product Table -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Stock Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (products.length > 0) { %>
+                    <% products.forEach(function(product) { %>
+                        <tr>
+                            <td>
+                                <% if (product.images && product.images.length > 0) { %>
+                                    <% let imagePath = product.images[0].split('\\').pop().split('/').pop(); %> <!-- Handles both slashes -->
+                                    <img src="/images/<%= imagePath %>" alt="Product Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                <% } else { %>
+                                    <img src="/images/placeholder.jpg" alt="No Image Available" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                <% } %>
+                            </td>
+                                                                             
+                            
+                            <td><%= product.name %></td>
+                            <td><%= product.description %></td>
+                            <td><%= product.price %></td>
+                            <td><%= product.category.name %></td>
+                            <td><%= product.stockQuantity %></td>
+                            <td>
+                                <!-- Edit Product Button -->
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editProductModal<%= product._id %>">
+                                    Edit
+                                </button>
+
+                                <!-- Edit Product Modal -->
+                                <div class="modal fade" id="editProductModal<%= product._id %>" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel<%= product._id %>" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editProductModalLabel<%= product._id %>">Edit Product</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form action="/adminPanel/products/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
+                                                <div class="modal-body">
+                                                    <!-- Form fields -->
+                                                    <div class="form-group">
+                                                        <label for="productName">Product Name</label>
+                                                        <input type="text" name="name" class="form-control" value="<%= product.name %>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="productDescription">Description</label>
+                                                        <textarea name="description" class="form-control" required><%= product.description %></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="productPrice">Price</label>
+                                                        <input type="number" name="price" class="form-control" value="<%= product.price %>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="productCategory">Category</label>
+                                                        <select name="category" class="form-control" required>
+                                                            <% categories.forEach(function(category) { %>
+                                                                <option value="<%= category._id %>" <%= product.category._id.equals(category._id) ? 'selected' : '' %>><%= category.name %></option>
+                                                            <% }); %>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="productStock">Stock Quantity</label>
+                                                        <input type="number" name="stockQuantity" class="form-control" value="<%= product.stockQuantity %>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="productStatus">Stock Status</label>
+                                                        <select name="stockStatus" class="form-control" required>
+                                                            <option value="In Stock" <%= product.stockStatus === 'In Stock' ? 'selected' : '' %>>In Stock</option>
+                                                            <option value="Out of Stock" <%= product.stockStatus === 'Out of Stock' ? 'selected' : '' %>>Out of Stock</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="images">Product Images:</label>
+                                                        <input type="file" name="images" id="images" accept="image/*" multiple>
+                                                    </div>
+                                                    <small class="text-muted">Note: You must upload at least 3 images.</small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Toggle Product Status -->
+                                <form action="/adminPanel/products/toggle/<%= product._id %>" method="POST" style="display:inline;">
+                                    <button class="btn btn-sm <%= product.isDelete ? 'btn-success' : 'btn-danger' %>">
+                                        <%= product.isDelete ? "Restore" : "Delete" %>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="7">No products found</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="/adminPanel/products?page=<%= currentPage - 1 %>&search=<%= search %>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="/adminPanel/products?page=<%= i %>&search=<%= search %>"><%= i %></a>
+                    </li>
+                <% } %>
+                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="/adminPanel/products?page=<%= currentPage + 1 %>&search=<%= search %>" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/adminPanel/products/add" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Description</label>
+                            <textarea name="description" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Price</label>
+                            <input type="number" name="price" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Category</label>
+                            <select name="category" class="form-control" required>
+                                <% categories.forEach(function(category) { %>
+                                    <option value="<%= category._id %>"><%= category.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productStock">Stock Quantity</label>
+                            <input type="number" name="stockQuantity" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productStatus">Stock Status</label>
+                            <select name="stockStatus" class="form-control" required>
+                                <option value="In Stock">In Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="images">Product Images:</label>
+                            <input type="file" name="images" id="images" accept="image/*" multiple required>
+                        </div>
+                        <small class="text-muted">Note: You must upload at least 3 images.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

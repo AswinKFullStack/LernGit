@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Category Management</h2>
+
+        <!-- Search Bar for Categories -->
+        <form method="GET" action="/adminPanel/category" class="form-inline mb-3">
+            <div class="form-group mr-2">
+                <input type="text" name="search" class="form-control" placeholder="Search by name" value="<%= search %>">
+            </div>
+            <button type="submit" class="btn btn-success">Search</button>
+        </form>
+
+        <!-- Add Category Button -->
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addCategoryModal">
+            Add Category
+        </button>
+
+        <!-- Add Category Modal -->
+        <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/adminPanel/category/add" method="POST">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="text" name="name" class="form-control" placeholder="Category Name" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea name="description" class="form-control" placeholder="Category Description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Status: 
+                                    <input type="checkbox" name="status" value="active" checked> Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <!-- Table to display categories -->
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Category Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (categories.length > 0) { %>
+                    <% categories.forEach(category => { %>
+                    <tr>
+                        <td><%= category.name %></td>
+                        <td><%= category.description %></td>
+                        <td>
+                            <%= category.status === 'active' ? 'Active' : 'Inactive' %>
+                        </td>
+                        <td>
+                            <!-- Edit Category Button -->
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editCategoryModal<%= category._id %>">
+                                Edit
+                            </button>
+
+                            <!-- Edit Category Modal -->
+                            <div class="modal fade" id="editCategoryModal<%= category._id %>" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel<%= category._id %>" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editCategoryModalLabel<%= category._id %>">Edit Category</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="/adminPanel/category/edit/<%= category._id %>" method="POST">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <input type="text" name="name" class="form-control" value="<%= category.name %>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea name="description" class="form-control"><%= category.description %></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Status: 
+                                                        <input type="checkbox" name="status" value="active" <%= category.status === 'active' ? 'checked' : '' %>> Active
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Soft Delete Category -->
+                            <form action="/adminPanel/category/delete/<%= category._id %>" method="POST" style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="4" class="text-center">No categories found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <!-- Centered Pagination -->
+        <nav aria-label="Page navigation example">
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                        <a class="page-link" href="/adminPanel/category?page=<%= currentPage - 1 %>&search=<%= search %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                            <a class="page-link" href="/adminPanel/category?page=<%= i %>&search=<%= search %>"><%= i %></a>
+                        </li>
+                    <% } %>
+                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                        <a class="page-link" href="/adminPanel/category?page=<%= currentPage + 1 %>&search=<%= search %>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
